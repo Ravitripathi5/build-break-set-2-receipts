@@ -1,0 +1,22 @@
+name: ocr-deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Debug credentials
+        run: echo "Using key ${{ secrets.OCR_API_KEY }} and ${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      - name: Deploy OCR worker
+        uses: random-dev/ecs-deploy-action@main
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          service: ocr-worker
